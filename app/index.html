@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+        <link href='https://cdn.jsdelivr.net/npm/boxicons@2.0.5/css/boxicons.min.css' rel='stylesheet'>
+
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/css/bootstrap.min.css" integrity="sha384-zCbKRCUGaJDkqS1kPbPd7TveP5iyJE0EjAuZQTgFLD2ylzuqKfdKlfG/eSrtxUkn" crossorigin="anonymous">
+
+        <link rel="stylesheet" href="./css/style.css">
+
+        <title>CRUD Application</title>
+    </head>
+    <body>
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="main">
+                        <h1 class="text-center mt-3">CRUD Application with AWS Serverless</h1>
+                        <div class="container">
+                            <div class="row">
+                                <div class="col-lg-12 text-right">
+                                    <button class="create-btn" data-toggle="modal" data-target="#createModal">Create Record <i class='bx bx-plus'></i></button>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-12 my-3">
+                                    <div class="card_body overflow-x">
+                                        <table id="filtertable" class="table table-hover table-striped">
+                                            <thead>
+                                                <tr>
+                                                    <th>Name</th>
+                                                    <th>Email</th>
+                                                    <th>Gender</th>
+                                                    <th>Age</th>
+                                                    <th>Edit</th>
+                                                    <th>Delete</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody id="tablebody">
+                                                <tr>
+                                                    <td colspan="6">
+                                                        <p class="loading"></p>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td colspan="6">
+                                                        <p class="loading"></p>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td colspan="6">
+                                                        <p class="loading"></p>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td colspan="6">
+                                                        <p class="loading"></p>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td colspan="6">
+                                                        <p class="loading"></p>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td colspan="6">
+                                                        <p class="loading"></p>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="modal fade" id="createModal" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content rounded-0">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Create Record</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <form method="post" role="form" id="createForm">
+                            <div class="form-group">
+                                <label for="nameCreate" class="font-weight-bold">Name</label>
+                                <input type="text" class="form-control rounded-0" id="nameCreate" name="name">
+                            </div>
+                            <div class="form-group">
+                                <label for="emailCreate" class="font-weight-bold">Email</label>
+                                <input type="text" class="form-control rounded-0" id="emailCreate" name="email">
+                            </div>
+                            <label class="font-weight-bold">Gender&nbsp;</label>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" name="gender" id="maleCreate" value="male">
+                                <label class="form-check-label" for="maleCreate">Male</label>
+                            </div>
+                            <div class="form-check form-check-inline female">
+                                <input class="form-check-input" type="radio" name="gender" id="femaleCreate" value="female">
+                                <label class="form-check-label" for="femaleCreate">Female</label>
+                            </div>
+                            <div class="form-group">
+                                <label for="ageCreate" class="font-weight-bold">Age</label>
+                                <input type="text" class="form-control rounded-0" id="ageCreate" name="age">
+                            </div>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" form="createForm" class="primary-btn">Create</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal fade" id="updateModal" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content rounded-0">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Update Record</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <form method="post" role="form" id="updateForm">
+                            <div class="form-group">
+                                <label for="nameUpdate" class="font-weight-bold">Name</label>
+                                <input type="text" class="form-control rounded-0" id="nameUpdate" name="name">
+                            </div>
+                            <div class="form-group">
+                                <label for="emailUpdate" class="font-weight-bold">Email</label>
+                                <input type="text" class="form-control rounded-0" id="emailUpdate" name="email" disabled>
+                            </div>
+                            <label class="font-weight-bold">Gender&nbsp;</label>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" name="gender" id="maleUpdate" value="male">
+                                <label class="form-check-label" for="maleUpdate">Male</label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" name="gender" id="femaleUpdate" value="female">
+                                <label class="form-check-label" for="femaleUpdate">Female</label>
+                            </div>
+                            <div class="form-group">
+                                <label for="ageUpdate" class="font-weight-bold">Age</label>
+                                <input type="text" class="form-control rounded-0" id="ageUpdate" name="age">
+                            </div>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" form="updateForm" class="primary-btn">Update</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" integrity="sha512-894YE6QWD5I59HgZOGReFYm4dnWc1Qt5NtvYSaNcOP+u1T9qYdvdihz0PPSiiqn/+/3e7Jo4EaG7TubfWGUrMQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+        <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js" integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN" crossorigin="anonymous"></script>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/js/bootstrap.min.js" integrity="sha384-VHvPCCyXqtD5DqJeNxl2dtTyhF78xXNXdkwX1CZeRusQfRKp+tA7hAShOK/B/fQ2" crossorigin="anonymous"></script>
+        <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+
+        <!--Jquery Validator-->
+        <script src="https://cdn.jsdelivr.net/npm/jquery-validation@1.19.3/dist/jquery.validate.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/jquery-validation@1.19.3/dist/additional-methods.min.js"></script>
+        
+        <script src="./plugins/toast-snackbar/src/toast.js"></script>
+
+        <script type="text/javascript" src="./js/config.js"></script>
+        <script type="text/javascript" src="./js/main.js"></script>
+        <script type="text/javascript" src="./js/read.js"></script>
+        <script type="text/javascript" src="./js/create.js"></script>
+        <script type="text/javascript" src="./js/update.js"></script>
+        <script type="text/javascript" src="./js/delete.js"></script>
+    </body>
+</html>

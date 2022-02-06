@@ -1,0 +1,205 @@
+/*--Poopin--*/
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400;500;600;700;800;900&display=swap');
+
+:root
+{
+    --first-color: #ff9a00;
+    --first-color-light: #404040;
+    --white-color: #F7F6FB;
+    
+    --body-font: 'Poppins', sans-serif;
+    --normal-font-size: 1rem;
+
+    --z-fixed: 100;
+}
+
+*,::before,::after
+{
+    box-sizing: border-box;
+}
+
+body
+{
+    position: relative;
+    font-family: var(--body-font);
+    font-size: var(--normal-font-size);
+    transition: .5s;
+    background: linear-gradient(#404040, #151415);
+    background-repeat: no-repeat;
+    min-height: 100vh;
+}
+
+a
+{
+    text-decoration: none;
+}
+
+.main
+{
+    color: #ffffff;
+}
+.main h1
+{
+    font-weight: 800;
+}
+
+.card_body
+{
+    background-color: white;
+    padding: 20px;
+    max-height: 480px;
+    border: 1px solid transparent;
+    -webkit-box-shadow: 0 1px 1px rgba(0, 0, 0, 0.05);
+    box-shadow: 0 1px 1px rgba(0, 0, 0, 0.05);
+    overflow: auto;
+}
+.table 
+{
+    margin-bottom: 0;
+}
+.table thead {
+    background-color: #151415;
+}
+.table>thead>tr>th {
+    border-bottom-width: 0;
+    border: none;
+    color: #ff9a00;
+    font-weight: 600;
+    padding: 16px 15px;
+    vertical-align: middle;
+    padding-left: 18px;
+    text-align: center;
+}
+.table>tbody td {
+    padding: 10px 15px;
+    color: #151415;
+    font-size: 15px;
+    font-weight: 500;
+    border-color: #eee;
+    text-align: center;
+    vertical-align: middle;
+}
+
+.table>tbody td p {
+    margin: 0;
+}
+
+.primary-btn 
+{
+    display: inline-block;
+    border: 1px solid #ff9a00 ;
+    color: #fff;
+    background: #ff9a00;
+    padding: 5px 10px;
+    text-transform: capitalize;
+    transition: 0.3s;
+    margin-top: 10px;
+    white-space: nowrap;
+}
+.primary-btn:hover
+{
+    background: transparent;
+    color: #ff9a00;
+}
+
+.secondary-btn
+{
+    display: inline-block;
+    border: 1px solid #212121 ;
+    color: #fff;
+    background: #212121;
+    padding: 5px 10px;
+    text-transform: uppercase;
+    text-decoration: none;
+    transition: 0.3s;
+    white-space: nowrap;
+}
+.secondary-btn:hover
+{
+    background: transparent;
+    color: #212121;
+}
+
+.create-btn 
+{
+    display: inline-block;
+    border: 1px solid #ff9a00 ;
+    color: #fff;
+    background: #ff9a00;
+    padding: 10px 15px;
+    text-transform: capitalize;
+    transition: 0.3s;
+    margin-top: 10px;
+    white-space: nowrap;
+}
+.create-btn:hover
+{
+    background: transparent;
+    color: #ff9a00;
+}
+.edit-btn
+{
+    margin-left: auto;
+    margin-right: auto;
+    border: 1px solid #212121 ;
+    color: #fff;
+    background: #212121;
+    padding: 5px 10px;
+    text-transform: uppercase;
+    text-decoration: none;
+    transition: 0.3s;
+    white-space: nowrap;
+}
+.edit-btn:hover
+{
+    background: transparent;
+    color: #212121;
+}
+
+.delete-btn
+{
+    margin-left: auto;
+    margin-right: auto;
+    border: 1px solid #dc3545 ;
+    color: #fff;
+    background: #dc3545;
+    padding: 5px 10px;
+    text-transform: uppercase;
+    text-decoration: none;
+    transition: 0.3s;
+    white-space: nowrap;
+}
+.delete-btn:hover
+{
+    background: transparent;
+    color: #dc3545;
+}
+
+.loading 
+{
+    background: linear-gradient(110deg, #e0e0e0 8%, #f5f5f5 18%, #e0e0e0 33%);
+    animation: 1.5s loading linear infinite;
+    background-size: 200% 100%;
+    min-height: 40px;
+}
+
+input
+{
+    border: 1px solid #212121;
+    box-shadow: none;
+}
+input:focus
+{
+    border: 1px solid #ff9a00;
+}
+
+@keyframes loading 
+{
+    to 
+    {
+        background-position-x: -200%;
+    }
+}
+
+
+

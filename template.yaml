@@ -1,0 +1,264 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: >
+  CRUD-Operation-SAM
+
+Parameters:
+  StackStage:
+    Type: String
+    Default: prod
+    Description: Enter dev, test, or prod accroding to your stack, 'dev' is default.
+
+Mappings:
+  Environment:
+    StackStageCaseChange:
+      DEV: dev
+      TEST: test
+      PROD: prod
+      Dev: dev
+      Test: test
+      Prod: prod
+      dev: dev
+      test: test
+      prod: prod
+
+Globals:
+  Function:
+    Runtime: python3.8
+    Timeout: 120
+    Environment:
+      Variables: # For all lambda functions to get DynamoDB table name
+        TABLE_NAME: !Ref DynamoDBRecordTable
+
+Resources:
+  DynamoDBRecordTable: # Record table to store all data
+    Type: AWS::Serverless::SimpleTable
+    Properties:
+      TableName: 
+        !Join
+          - ''
+          - -  !Ref AWS::StackName
+            - "-record-table-"
+            - !FindInMap [Environment, StackStageCaseChange, !Ref StackStage]
+      PrimaryKey:
+        Name: email
+        Type: String
+
+  CRUDRestApi:
+    Type: AWS::Serverless::Api
+    Properties:
+      Name: 
+        !Join
+          - ''
+          - -  !Ref AWS::StackName
+            - '-api-'
+            - !FindInMap [Environment, StackStageCaseChange, !Ref StackStage]
+      StageName: !FindInMap [Environment, StackStageCaseChange, !Ref StackStage]
+      EndpointConfiguration:
+        Type: EDGE
+      Description: This is public front rest api for crud op stack.
+      Auth:
+        DefaultAuthorizer: NONE
+      Cors:
+        AllowMethods: "'POST, GET, DELETE'"
+        AllowHeaders: "'*'"
+        AllowOrigin: "'*'"
+        MaxAge: "'600'"
+
+  FunctionCreateRecordRole: # IAM Role with DynamoDB create item permission only
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service:
+                - lambda.amazonaws.com
+            Action:
+              - sts:AssumeRole
+      Path: /
+      Policies:
+        - PolicyName: 
+            !Join
+              - ''
+              - - !Ref AWS::StackName
+                - 'create-record-role-'
+                - !FindInMap [Environment, StackStageCaseChange, !Ref StackStage]
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+              - Effect: Allow
+                Action: 
+                  - dynamodb:PutItem
+                Resource: !GetAtt DynamoDBRecordTable.Arn
+
+  FunctionReadRecordRole: # IAM Role with DynamoDB scan permission only
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service:
+                - lambda.amazonaws.com
+            Action:
+              - sts:AssumeRole
+      Path: /
+      Policies:
+        - PolicyName: 
+            !Join
+              - ''
+              - - !Ref AWS::StackName
+                - 'read-record-role-'
+                - !FindInMap [Environment, StackStageCaseChange, !Ref StackStage]
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+              - Effect: Allow
+                Action: 
+                  - dynamodb:Scan
+                Resource: !GetAtt DynamoDBRecordTable.Arn
+
+  FunctionUpdateRecordRole: # IAM Role with DynamoDB update item permission only
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service:
+                - lambda.amazonaws.com
+            Action:
+              - sts:AssumeRole
+      Path: /
+      Policies:
+        - PolicyName: 
+            !Join
+              - ''
+              - - !Ref AWS::StackName
+                - 'update-record-role-'
+                - !FindInMap [Environment, StackStageCaseChange, !Ref StackStage]
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+              - Effect: Allow
+                Action: 
+                  - dynamodb:UpdateItem
+                Resource: !GetAtt DynamoDBRecordTable.Arn
+
+  FunctionDeleteRecordRole: # IAM Role with DynamoDB delete item permission only
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service:
+                - lambda.amazonaws.com
+            Action:
+              - sts:AssumeRole
+      Path: /
+      Policies:
+        - PolicyName: 
+            !Join
+              - ''
+              - - !Ref AWS::StackName
+                - '-delete-record-role-'
+                - !FindInMap [Environment, StackStageCaseChange, !Ref StackStage]
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+              - Effect: Allow
+                Action: 
+                  - dynamodb:DeleteItem
+                Resource: !GetAtt DynamoDBRecordTable.Arn
+
+  CreateRecord: # Create a new record in DB
+    Type: AWS::Serverless::Function 
+    Properties:
+      CodeUri: functions/
+      Handler: create_record.lambda_handler
+      Role: !GetAtt FunctionCreateRecordRole.Arn 
+      Events:
+        ApiEvent:
+          Type: Api 
+          Properties:
+            Path: /create
+            Method: POST
+            RestApiId: 
+              Ref: CRUDRestApi
+
+  ReadRecord: # Read all records from DB
+    Type: AWS::Serverless::Function 
+    Properties:
+      CodeUri: functions/
+      Handler: read_record.lambda_handler
+      Role: !GetAtt FunctionReadRecordRole.Arn 
+      Events:
+        ApiEvent:
+          Type: Api 
+          Properties:
+            Path: /read
+            Method: GET
+            RestApiId: 
+              Ref: CRUDRestApi
+
+  UpdateRecord: # Update existing record in DB
+    Type: AWS::Serverless::Function 
+    Properties:
+      CodeUri: functions/
+      Handler: update_record.lambda_handler
+      Role: !GetAtt FunctionUpdateRecordRole.Arn 
+      Events:
+        ApiEvent:
+          Type: Api 
+          Properties:
+            Path: /update
+            Method: POST
+            RestApiId: 
+              Ref: CRUDRestApi
+
+  DeleteRecord: # Delete a particular record from DB
+    Type: AWS::Serverless::Function 
+    Properties:
+      CodeUri: functions/
+      Handler: delete_record.lambda_handler
+      Role: !GetAtt FunctionDeleteRecordRole.Arn
+      Events:
+        ApiEvent:
+          Type: Api 
+          Properties:
+            Path: /delete
+            Method: DELETE
+            RestApiId: 
+              Ref: CRUDRestApi
+
+Outputs:
+  StackName:
+    Description: This is your cloudformation stack name
+    Value: !Ref AWS::StackName
+  StackRegion:
+    Description: This is your cloudformation stack region
+    Value: !Ref AWS::Region
+  StackStage:
+    Description: This is your cloudformation stack stage, 'dev' is default
+    Value: !Ref StackStage
+  ApiBaseUrl:
+      Description: This is your API base url
+      Value: !Sub 'https://${CRUDRestApi}.execute-api.${AWS::Region}.amazonaws.com'
+  CreateRecordApiPath:
+    Description: This is your API path for create record
+    Value: !Sub 'https://${CRUDRestApi}.execute-api.${AWS::Region}.amazonaws.com/${StackStage}/create'
+  ReadRecordApiPath:
+    Description: This is your API path for read all records
+    Value: !Sub 'https://${CRUDRestApi}.execute-api.${AWS::Region}.amazonaws.com/${StackStage}/read'
+  UpdateRecordApiPath:
+    Description: This is your API path for update record
+    Value: !Sub 'https://${CRUDRestApi}.execute-api.${AWS::Region}.amazonaws.com/${StackStage}/update'
+  DeleteRecordApiPath:
+    Description: This is your API path for delete record
+    Value: !Sub 'https://${CRUDRestApi}.execute-api.${AWS::Region}.amazonaws.com/${StackStage}/delete'
