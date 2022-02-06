@@ -39,4 +39,9 @@ sam deploy --guided
 aws cloudformation delete-stack --stack-name <stack-name> --region <aws-region>
 ```
 
+---
+### Visit the below my blog post:
+<img src="https://miro.medium.com/max/1400/1*Z8bpjddWNoJ0uP8mQW-8mQ.png" width="500" height="300" />
+
+https://enlear.academy/complete-crud-application-with-aws-serverless-6538e9dca7c1
 
